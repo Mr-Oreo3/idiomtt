@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deyimler Kitabı - The Proverbs Book</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c1810;
+            --secondary: #d4a574;
+            --accent: #c7534e;
+            --light-bg: #f5ede3;
+            --text-dark: #2c1810;
+            --text-light: #f5ede3;
+            --page-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            background: linear-gradient(135deg, #1a0f0a 0%, #2c1810 50%, #1a0f0a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(199, 83, 78, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideInDown 0.8s ease-out;
+            padding: 0 15px;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: var(--secondary);
+            font-style: italic;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease-out 0.3s both;
+            padding: 0 10px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+        }
+
+        .tabs-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tabs-container::-webkit-scrollbar-track {
+            background: rgba(212, 165, 116, 0.2);
+        }
+
+        .tabs-container::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .tab-button {
+            padding: 10px 16px;
+            background: var(--light-bg);
+            border: 2px solid var(--secondary);
+            color: var(--text-dark);
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 0.9em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary);
+            z-index: -1;
+            transition: left 0.4s ease;
+        }
+
+        .tab-button:hover::before {
+            left: 0;
+        }
+
+        .tab-button:hover {
+            color: var(--light-bg);
+        }
+
+        .tab-button.active {
+            background: var(--secondary);
+            color: var(--text-light);
+        }
+
+        .book-frame {
+            perspective: 1200px;
+            animation: fadeIn 0.8s ease-out 0.5s both;
+            padding: 0 10px;
+        }
+
+        .book-container {
+            background: var(--light-bg);
+            border-radius: 8px;
+            box-shadow: var(--page-shadow);
+            overflow: hidden;
+            transform-origin: center;
+            transition: var(--transition);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #3d2817 100%);
+            padding: 25px 20px;
+            color: var(--secondary);
+            text-align: center;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .book-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .book-header .page-info {
+            font-size: 0.9em;
+            opacity: 0.85;
+            font-style: italic;
+        }
+
+        .book-content {
+            padding: 30px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 600px;
+            animation: contentFadeIn 0.6s ease-out;
+        }
+
+        .book-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .book-content::-webkit-scrollbar-track {
+            background: rgba(212, 165, 116, 0.1);
+        }
+
+        .book-content::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        .book-content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        .proverb-item {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 1px solid rgba(44, 24, 16, 0.15);
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .proverb-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .proverb-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .proverb-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 4px 12px rgba(199, 83, 78, 0.3);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .proverb-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .proverb-english {
+            font-size: 1.2em;
+            color: var(--text-dark);
+            font-weight: 600;
+            line-height: 1.4;
+            letter-spacing: 0.3px;
+        }
+
+        .speak-btn {
+            background: none;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: var(--transition);
+            flex-shrink: 0;
+            padding: 0;
+        }
+
+        .speak-btn:hover {
+            background: var(--secondary);
+            color: var(--light-bg);
+            transform: scale(1.1);
+        }
+
+        .speak-btn:active {
+            transform: scale(0.95);
+        }
+
+        .proverb-turkish {
+            font-size: 1.05em;
+            color: var(--primary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+            padding-left: 15px;
+            border-left: 3px solid var(--secondary);
+            font-style: italic;
+        }
+
+        .proverb-example {
+            font-size: 0.95em;
+            color: #555;
+            font-style: italic;
+            padding: 12px;
+            background: rgba(212, 165, 116, 0.08);
+            border-radius: 4px;
+            line-height: 1.6;
+            border-left: 3px solid var(--accent);
+        }
+
+        .book-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(44, 24, 16, 0.8) 0%, rgba(61, 40, 23, 0.8) 100%);
+            border-top: 2px solid var(--secondary);
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-button {
+            background: var(--secondary);
+            border: none;
+            color: var(--text-light);
+            padding: 10px 16px;
+            font-size: 0.95em;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Georgia', serif;
+            font-weight: 600;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .footer-button:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(199, 83, 78, 0.3);
+        }
+
+        .footer-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer-info {
+            color: var(--secondary);
+            font-size: 0.9em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .page-indicator {
+            color: var(--secondary);
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .stagger-1 { animation-delay: 0s; }
+        .stagger-2 { animation-delay: 0.1s; }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .book-header h2 {
+                font-size: 1.4em;
+            }
+
+            .proverb-english {
+                font-size: 1.05em;
+            }
+
+            .footer-button {
+                padding: 8px 12px;
+                font-size: 0.85em;
+            }
+
+            .footer-info {
+                width: 100%;
+                order: 3;
+                margin-top: 10px;
+                font-size: 0.85em;
+            }
+
+            .book-content {
+                max-height: 500px;
+                padding: 20px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .tabs-container {
+                gap: 4px;
+                margin-bottom: 20px;
+            }
+
+            .tab-button {
+                padding: 8px 12px;
+                font-size: 0.8em;
+            }
+
+            .proverb-item {
+                margin-bottom: 25px;
+                padding-bottom: 25px;
+            }
+
+            .proverb-number {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9em;
+            }
+
+            .proverb-english {
+                font-size: 1em;
+            }
+
+            .proverb-turkish {
+                font-size: 0.95em;
+            }
+
+            .proverb-example {
+                font-size: 0.9em;
+            }
+
+            .book-header h2 {
+                font-size: 1.2em;
+            }
+
+            .book-header .page-info {
+                font-size: 0.8em;
+            }
+
+            .book-content {
+                max-height: 450px;
+                padding: 15px 12px;
+            }
+
+            .book-footer {
+                padding: 15px 10px;
+                gap: 8px;
+            }
+
+            .footer-button {
+                padding: 8px 10px;
+                font-size: 0.8em;
+                min-width: 80px;
+            }
+
+            .footer-info {
+                font-size: 0.8em;
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="header">
+                <h1>📖 Deyimler Kitabı</h1>
+                <p>The Proverbs Book</p>
+            </div>
+
+            <div class="tabs-container" id="tabsContainer"></div>
+
+            <div class="book-frame">
+                <div class="book-container">
+                    <div class="book-header">
+                        <h2 id="categoryTitle">Zaman ve Fırsat</h2>
+                        <div class="page-info">
+                            Sayfa <span class="page-indicator" id="currentPage">1</span> / <span id="totalPages">1</span>
+                        </div>
+                    </div>
+
+                    <div class="book-content" id="bookContent">
+                        <!-- Deyimler buraya yüklenecek -->
+                    </div>
+
+                    <div class="book-footer">
+                        <button class="footer-button" id="prevBtn" onclick="previousPage()">← Önceki</button>
+                        <div class="footer-info">
+                            <span id="categoryInfo"></span>
+                        </div>
+                        <button class="footer-button" id="nextBtn" onclick="nextPage()">Sonraki →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const proverbs = {
+            'Zaman ve Fırsat': [
+                {
+                    english: "The early bird catches the worm",
+                    turkish: "Erken kalkan yol alır",
+                    example: "If you want to succeed in your career, remember the early bird catches the worm - start your day early."
+                },
+                {
+                    english: "Time is money",
+                    turkish: "Vakit nakittir",
+                    example: "Don't waste your time on unproductive tasks because time is money in business."
+                },
+                {
+                    english: "Miss the boat",
+                    turkish: "Fırsatı kaçırmak",
+                    example: "If you don't apply for that scholarship soon, you'll miss the boat."
+                },
+                {
+                    english: "Buy time",
+                    turkish: "Zaman kazanmak",
+                    example: "He decided to buy time by postponing the decision until next month."
+                },
+                {
+                    english: "Try one's luck",
+                    turkish: "Şansını denemek",
+                    example: "She decided to try her luck by applying to the company even though she was underqualified."
+                },
+                {
+                    english: "A watched pot never boils",
+                    turkish: "Başında beklenen su kaynamaz",
+                    example: "Stop worrying about the results - a watched pot never boils, they'll come when they're ready."
+                }
+            ],
+            'Görünüş ve Gerçek': [
+                {
+                    english: "Don't judge a book by its cover",
+                    turkish: "Kitapı kapağından yargılama",
+                    example: "He looks intimidating, but don't judge a book by its cover - he's actually very kind."
+                },
+                {
+                    english: "All ears",
+                    turkish: "Kulak kabartp dinlemek",
+                    example: "Tell me your plan - I'm all ears."
+                },
+                {
+                    english: "Apple of my eye",
+                    turkish: "Gözümün bebeği",
+                    example: "My daughter is the apple of my eye - I love her more than anything."
+                },
+                {
+                    english: "A picture is worth a thousand words",
+                    turkish: "Bir resim bin kelimeye bedeldir",
+                    example: "Instead of explaining, I'll show you a diagram because a picture is worth a thousand words."
+                },
+                {
+                    english: "The devil is in the details",
+                    turkish: "Şeytan detaylarda gizlidir",
+                    example: "The plan seems good, but the devil is in the details - we need to review every aspect carefully."
+                },
+                {
+                    english: "Out of sight, out of mind",
+                    turkish: "Gözden uzak olan doğaldır",
+                    example: "Since he moved away, we haven't spoken much - out of sight, out of mind, I guess."
+                }
+            ],
+            'Bilgelik ve Öğrenim': [
+                {
+                    english: "Every cloud has a silver lining",
+                    turkish: "Her işte bir hayır vardır",
+                    example: "I didn't get the job I wanted, but every cloud has a silver lining - I found a better opportunity."
+                },
+                {
+                    english: "The pen is mightier than the sword",
+                    turkish: "Kalem kılıçtan keskindir",
+                    example: "The writer's powerful words changed society more than any weapon could - the pen is mightier than the sword."
+                },
+                {
+                    english: "You reap what you sow",
+                    turkish: "Ne ekersen onu biçersin",
+                    example: "He treated everyone poorly, and now nobody wants to help him - you reap what you sow."
+                },
+                {
+                    english: "Money doesn't grow on trees",
+                    turkish: "Para ağaçta yetişmez",
+                    example: "Stop asking for money - money doesn't grow on trees, you need to earn it."
+                },
+                {
+                    english: "Curiosity killed the cat",
+                    turkish: "Merak kediyi öldürür",
+                    example: "Don't ask too many personal questions or curiosity killed the cat - you might get hurt."
+                },
+                {
+                    english: "A chain is as strong as its weakest link",
+                    turkish: "Zincir en zayıf halkası kadar güçlüdür",
+                    example: "Our team won't succeed if one member isn't pulling their weight - a chain is as strong as its weakest link."
+                }
+            ],
+            'Düşünce ve Tavır': [
+                {
+                    english: "Be on the same page",
+                    turkish: "Aynı fikirde olmak",
+                    example: "Before starting the project, let's make sure we're on the same page about the goals."
+                },
+                {
+                    english: "Keep one's mouth shut",
+                    turkish: "Dilini tutmak",
+                    example: "If you can't say something helpful, keep your mouth shut."
+                },
+                {
+                    english: "Let it go",
+                    turkish: "Peşini bırakmak",
+                    example: "Stop arguing about what happened in the past - just let it go and move forward."
+                },
+                {
+                    english: "Be on the same boat",
+                    turkish: "Aynı gemide olmak",
+                    example: "We're all facing the same challenges, we're in the same boat, so we need to help each other."
+                },
+                {
+                    english: "Two heads are better than one",
+                    turkish: "Bir elin nesi var, iki elin sesi var",
+                    example: "Let's work together on this problem - two heads are better than one."
+                },
+                {
+                    english: "Don't cry over spilled milk",
+                    turkish: "At alan üsküdarı geçti",
+                    example: "Yes, you made a mistake, but don't cry over spilled milk - focus on fixing it now."
+                }
+            ],
+            'Planlama ve Strateji': [
+                {
+                    english: "Go by the rules",
+                    turkish: "Kıtabına uydurmak",
+                    example: "In this company, we go by the rules - there are no exceptions."
+                },
+                {
+                    english: "Break the ice",
+                    turkish: "Buzları kırmak",
+                    example: "The new employee was shy, so I tried to break the ice with some jokes."
+                },
+                {
+                    english: "Don't put all your eggs in one basket",
+                    turkish: "Tüm yumurtaları aynı sepete koymak",
+                    example: "Don't invest all your money in one stock - don't put all your eggs in one basket."
+                },
+                {
+                    english: "Go on track",
+                    turkish: "Rayında gitmek",
+                    example: "We've had some issues, but our project is now going on track."
+                },
+                {
+                    english: "Go off track",
+                    turkish: "Konuyu dağıtmak",
+                    example: "We started discussing the budget, but then went off track and talked about other things."
+                },
+                {
+                    english: "Be all over the place",
+                    turkish: "Kafası karışmak",
+                    example: "His thoughts are all over the place - he needs to focus and organize his ideas."
+                }
+            ],
+            'İmkansız Durumlar': [
+                {
+                    english: "When pigs fly",
+                    turkish: "Balık kavağa çıktığında",
+                    example: "Will he ever change his mind? When pigs fly! He's too stubborn."
+                },
+                {
+                    english: "The grass is greener on the other side",
+                    turkish: "Komşunun tavuğu komşuya kaz görünür",
+                    example: "You think a different job would be better, but the grass is always greener on the other side."
+                }
+            ]
+        };
+
+        let currentCategory = 'Zaman ve Fırsat';
+        let currentPage = 1;
+        const itemsPerPage = 2;
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+        }
+
+        function categoryToSlug(category) {
+            return category.toLowerCase().replace(/\s+/g, '-').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u');
+        }
+
+        function createTabs() {
+            const tabsContainer = document.getElementById('tabsContainer');
+            const categories = Object.keys(proverbs);
+
+            categories.forEach((category, index) => {
+                const button = document.createElement('button');
+                button.className = `tab-button ${index === 0 ? 'active' : ''}`;
+                button.textContent = category;
+                button.onclick = () => switchCategory(category, button);
+                tabsContainer.appendChild(button);
+            });
+        }
+
+        function switchCategory(category, button) {
+            currentCategory = category;
+            currentPage = 1;
+
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+
+            renderPage();
+        }
+
+        function renderPage() {
+            const categoryProverbs = proverbs[currentCategory];
+            const totalPages = Math.ceil(categoryProverbs.length / itemsPerPage);
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const pageProverbs = categoryProverbs.slice(startIdx, endIdx);
+
+            document.getElementById('categoryTitle').textContent = currentCategory;
+            document.getElementById('currentPage').textContent = currentPage;
+            document.getElementById('totalPages').textContent = totalPages;
+
+            const itemCount = categoryProverbs.length;
+            document.getElementById('categoryInfo').innerHTML = 
+                `<strong>${currentCategory}</strong> (${itemCount} deyim)`;
+
+            // URL güncelle - hash ile (sandbox uyumlu)
+            try {
+                const categorySlug = categoryToSlug(currentCategory);
+                window.location.hash = `category=${categorySlug}&page=${currentPage}`;
+            } catch (e) {
+                // Error handling
+            }
+
+            const bookContent = document.getElementById('bookContent');
+            bookContent.innerHTML = pageProverbs.map((proverb, idx) => {
+                const index = (currentPage - 1) * itemsPerPage + idx + 1;
+                return `
+                    <div class="proverb-item stagger-${idx + 1}">
+                        <div class="proverb-header">
+                            <div class="proverb-number">${index}</div>
+                            <div class="proverb-title">
+                                <div class="proverb-english">${proverb.english}</div>
+                                <button class="speak-btn" onclick="speak('${proverb.english.replace(/'/g, "\\'")}')">🔊</button>
+                            </div>
+                        </div>
+                        <div class="proverb-turkish">■ ${proverb.turkish}</div>
+                        <div class="proverb-example">
+                            💡 <strong>Example:</strong> ${proverb.example}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('bookContent').scrollTop = 0;
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        }
+
+        function nextPage() {
+            const categoryProverbs = proverbs[currentCategory];
+            const totalPages = Math.ceil(categoryProverbs.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        }
+
+        function getURLParams() {
+            const hash = window.location.hash.replace('#', '');
+            const params = new URLSearchParams(hash);
+            const category = params.get('category');
+            const page = params.get('page');
+
+            if (category) {
+                const categoryName = Object.keys(proverbs).find(
+                    cat => categoryToSlug(cat) === category
+                );
+                if (categoryName) {
+                    currentCategory = categoryName;
+                    const buttons = document.querySelectorAll('.tab-button');
+                    buttons.forEach((btn) => {
+                        if (btn.textContent === categoryName) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                }
+            }
+
+            if (page) {
+                currentPage = parseInt(page) || 1;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createTabs();
+            getURLParams();
+            renderPage();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousPage();
+            if (e.key === 'ArrowRight') nextPage();
+        });
+    </script>
+</body>
+</html>
